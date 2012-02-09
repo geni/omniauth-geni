@@ -1,8 +1,8 @@
-# OmniAuth Geni &nbsp;[![Build Status](http://travis-ci.org/mkdynamic/omniauth-geni.png?branch=master)](http://travis-ci.org/mkdynamic/omniauth-geni)
+# OmniAuth Geni
 
 Geni OAuth2 Strategy for OmniAuth 1.0.
 
-Supports the OAuth 2.0 server-side and client-side flows. Read the Geni docs for more details: http://dev.geni.com/platform/developer/help
+Supports the OAuth 2.0 server-side. Read the Geni docs for more details: http://www.geni.com/platform/developer/help
 
 ## Installing
 
@@ -26,20 +26,18 @@ Rails.application.config.middleware.use OmniAuth::Builder do
 end
 ```
 
-See a full example of both server and client-side flows in the example Sinatra app in the `example/` folder above.
-
 ## Configuring
 
 You can configure several options, which you pass in to the `provider` method via a `Hash`:
 
-* `scope`: A comma-separated list of permissions you want to request from the user. See the Geni docs for a full list of available permissions: http://dev.geni.com/docs/reference/api/permissions. Default: `email,offline_access`
-* `display`: The display context to show the authentication page. Options are: `page`, `popup`, `iframe`, `touch` and `wap`. Read the Geni docs for more details: http://developers.geni.com/docs/reference/dialogs#display. Default: `page`
+* `scope`: A comma-separated list of permissions you want to request from the user. See the Geni docs for a full list of available permissions. Default: `email`.
+* `display`: The display context to show the authentication page. Options are: `web`, `desktop` and `mobile`. Default: `web`.
 
-For example, to request `email`, `offline_access` and `read_stream` permissions and display the authentication page in a popup window:
+For example, to request `email` permission and display the authorization page in a mobile app:
  
 ```ruby
 Rails.application.config.middleware.use OmniAuth::Builder do
-  provider :geni, ENV['FACEBOOK_KEY'], ENV['FACEBOOK_SECRET'], :scope => 'email,offline_access,read_stream', :display => 'popup'
+  provider :geni, ENV['FACEBOOK_KEY'], ENV['FACEBOOK_SECRET'], :scope => 'email', :display => 'mobile'
 end
 ```
 
@@ -52,16 +50,12 @@ Here's an example *Authentication Hash* available in `request.env['omniauth.auth
 ```ruby
 {
   :provider => 'geni',
-  :uid => '1234567',
+  :uid => '123',
   :info => {
-    :nickname => 'jbloggs',
-    :email => 'joe@bloggs.com',
-    :name => 'Joe Bloggs',
-    :first_name => 'Joe',
-    :last_name => 'Bloggs',
-    :image => 'http://graph.geni.com/1234567/picture?type=square',
-    :urls => { :Geni => 'http://www.geni.com/jbloggs' },
-    :location => 'Palo Alto, California'
+    :first_name => 'Alex',
+    :last_name => 'Thompson',
+    :email => 'alex@sample.com',
+    :name => 'Alex Thompson'
   },
   :credentials => {
     :token => 'ABCDEF...', # OAuth 2.0 access_token, which you may wish to store
@@ -69,32 +63,17 @@ Here's an example *Authentication Hash* available in `request.env['omniauth.auth
     :expires => true # if you request `offline_access` this will be false
   },
   :extra => {
-    :raw_info => {
+    :profile => {
       :id => '1234567',
-      :name => 'Joe Bloggs',
-      :first_name => 'Joe',
-      :last_name => 'Bloggs',
-      :link => 'http://www.geni.com/jbloggs',
-      :username => 'jbloggs',
-      :location => { :id => '123456789', :name => 'Palo Alto, California' },
-      :gender => 'male',
-      :email => 'joe@bloggs.com',
-      :timezone => -8,
-      :locale => 'en_US',
-      :verified => true,
-      :updated_time => '2011-11-11T06:21:03+0000'
+      :name => 'Alex Thompson',
+      :first_name => 'Alex',
+      :last_name => 'Thompson'
     }
   }
 }
 ```
 
 The precise information available may depend on the permissions which you request.
-
-## Client-side Flow
-
-The client-side flow supports parsing the authorization code from the signed request which Geni puts into a cookie. This means you can to use the Geni Javascript SDK as you would normally, and you just hit the callback endpoint (`/auth/geni/callback` by default) once the user has authenticated in the `FB.login` success callback.
-
-See the example Sinatra app under `example/` for more details.
 
 ## Supported Rubies
 
@@ -104,19 +83,3 @@ Actively tested with the following Ruby versions:
 - MRI 1.9.2
 - MRI 1.8.7
 - JRuby 1.6.5
-
-*NB.* For JRuby, you'll need to install the `jruby-openssl` gem. There's no way to automatically specify this in a Rubygem gemspec, so you need to manually add it your project's own Gemfile:
-
-```ruby
-gem 'jruby-openssl', :platform => :jruby
-```
-
-## License
-
-Copyright (c) 2012 by Michael Berkovich
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
