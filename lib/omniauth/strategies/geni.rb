@@ -6,7 +6,7 @@ module OmniAuth
 
       option :client_options, {
         :site => 'https://www.geni.com',
-        :authorize_url => '/platform/oauth/authorize'
+        :authorize_url => '/platform/oauth/authorize',
         :token_url => '/platform/oauth/request_token'
       }
 
@@ -40,13 +40,41 @@ module OmniAuth
       uid { raw_info['id'] }
       
       info do
-        {
-          'name' => raw_info['name']
-        }
+        prune!({
+          'name'           => raw_info['name'],
+          'first_name'     => raw_info['first_name'],
+          'last_name'      => raw_info['last_name'],
+          'email'          => raw_info['email'],
+          'gender'         => raw_info['gender'],
+          'mugshot_urls'   => raw_info['mugshot_urls'],
+          'name'           => raw_info['name'],
+          'url'            => raw_info['url'],
+        })
+      end
+      
+      extra do 
+        { 'profile' =>  prune!(raw_info) }
       end
       
       def raw_info
-        @raw_info ||= access_token.get('/api/profile')
+        @raw_info ||= access_token.get('/api/profile').parsed
+      end
+
+      def authorize_params
+        super.tap do |params|
+          params.merge!(:display => request.params['display']) if request.params['display']
+          params.merge!(:state => request.params['state']) if request.params['state']
+          params[:scope] ||= 'email'
+        end
+      end
+
+      private
+
+      def prune!(hash)
+        hash.delete_if do |_, value|
+          prune!(value) if value.is_a?(Hash)
+          value.nil? || (value.respond_to?(:empty?) && value.empty?)
+        end
       end
 
     end
