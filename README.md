@@ -37,7 +37,7 @@ For example, to request `email` permission and display the authorization page in
  
 ```ruby
 Rails.application.config.middleware.use OmniAuth::Builder do
-  provider :geni, ENV['FACEBOOK_KEY'], ENV['FACEBOOK_SECRET'], :scope => 'email', :display => 'mobile'
+  provider :geni, ENV['GENI_KEY'], ENV['GENI_SECRET'], :scope => 'email', :display => 'mobile'
 end
 ```
 
