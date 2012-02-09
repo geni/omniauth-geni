@@ -58,9 +58,8 @@ Here's an example *Authentication Hash* available in `request.env['omniauth.auth
     :name => 'Alex Thompson'
   },
   :credentials => {
-    :token => 'ABCDEF...', # OAuth 2.0 access_token, which you may wish to store
-    :expires_at => 1321747205, # when the access token expires (if it expires)
-    :expires => true # if you request `offline_access` this will be false
+    :token => 'ABCDEF...', 			# OAuth 2.0 access_token
+    :expires_at => 1321747205 	# when the access token expires
   },
   :extra => {
     :profile => {
