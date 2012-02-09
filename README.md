@@ -74,12 +74,3 @@ Here's an example *Authentication Hash* available in `request.env['omniauth.auth
 ```
 
 The precise information available may depend on the permissions which you request.
-
-## Supported Rubies
-
-Actively tested with the following Ruby versions:
-
-- MRI 1.9.3
-- MRI 1.9.2
-- MRI 1.8.7
-- JRuby 1.6.5
